@@ -4,12 +4,23 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<link rel="stylesheet" type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
+<script src="Scripts/jquery-3.0.0.min.js"></script>
+
+<link rel="stylesheet" type="text/css"
+      href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<br />
+<h2>Clientes</h2>
+
+<p align="right">
+    <a href="/cliente/create" class="btn btn-dark"><i class="fas fa-plus"></i></a>
 </p>
-<table class="table">
+<table class="table table-striped table-dark">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Nome)
@@ -29,29 +40,80 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CPF)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Telefone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Endereco)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CPF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Endereco)
+            </td>
+            <td>
+                <a href="#" style="color: white" class="btnEditar" data-value="@item.Id"><i class="fas fa-pencil-alt"></i></a>
+                <a href="#" style="color: white" class="btnDetalhes" data-value="@item.Id"><i class="fas fa-info-circle"></i></a>
+                <a href="#" style="color: white" class="btnExcluir" data-value="@item.Id"><i class="fas fa-trash-alt"></i></a>
+            </td>
+        </tr>
+    }
 
 </table>
+
+<div class="modal fade" id="modal_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="modal"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $.ajaxSetup({ cache: false });
+
+            $(".btnDetalhes").click(function () {
+
+                var id = $(this).data("value");
+
+                $("#modal").load("/Cliente/Details/" + id, function () {
+                    $('#modal_cliente').modal("show");
+                });
+            });
+
+            $(".btnEditar").click(function () {
+
+                var id = $(this).data("value");
+
+                $("#modal").load("/Cliente/Edit/" + id, function () {
+                    $('#modal_cliente').modal("show");
+                });
+            });
+
+            $(".btnExcluir").click(function () {
+
+                var id = $(this).data("value");
+
+                $("#modal").load("/Cliente/Delete/" + id, function () {
+                    $('#modal_cliente').modal("show");
+                });
+            });
+        });
+
+    </script>
+
+}
